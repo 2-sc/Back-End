@@ -6,19 +6,24 @@
 - 활동 기간 : 2022.06.06 (월) ~ 2022.10.28 (금)
 
 
-## 🌍Save the Earth
-- 환경 보호에 관한 정보 공유 사이트
+## 🆘 Study Mate
 - [기획 및 기술 선정 Notion 페이지](https://www.notion.so/ryu-ddo/Save-the-Earth-2dfbd93a4dc740eda4c338a6ede43c8b)
 - [Figma UI 디자인 페이지](#)
+
+## ⚖ 다음은 스터디 메이트가 지향하는 가치입니다
+<div align="center">
+<img src="https://user-images.githubusercontent.com/91606951/179381234-35239ea1-cc18-4a1d-b2e3-47176527659d.jpg" width="600px;" height="400px;" style="box-shadow: 0px 0px 20px #000;" >
+</div>
 
 ## 👨‍👨‍👧‍👦 Member
 <div align="center">
 <h3>Front-end</h3>
 홍유진 <a href="https://github.com/timobyjin02">timobyjin02</a><br>
-홍석환 <a href="https://github.com/hsh519">hsh519</a><br>
+
 
 <h3>Back-end</h3>
-류경혜 <a href="https://github.com/ryukyung">ryukyung</a>
+류경혜 <a href="https://github.com/ryukyung">ryukyung</a> <br>
+홍석환 <a href="https://github.com/hsh519">hsh519</a><br>
 </div>
 
 ## 💻 Stack
@@ -28,9 +33,9 @@
 <p align="center">  
   <img src="https://img.shields.io/badge/HTML-white?logo=html5"/>
   <img src= "https://img.shields.io/badge/CSS-blue?logo=css3"/>
+  <img src= "https://img.shields.io/badge/Scss-pink?logo=sass"/>
   <img src= "https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript"/>
-
-
+  <img src= "https://img.shields.io/badge/React-blue?logo=react"/>
 <h3 align="center">  
  BackEnd
 </h3>
