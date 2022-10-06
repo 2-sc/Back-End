@@ -73,13 +73,13 @@ CORS_ALLOW_CREDENTIALS = True
 # 6. request.user 에 현재 요청을 보낸 유저가 담기고, view 에서 사용 가능
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # auth 앱에 있는 authenticate.py 에 있는 SafeJWTAuthentication 클래스를 기본 인증 클래스로 설정
         # request.user 에 알맞은 user를 적재해 주는 역할을 한다
-        'rest_framwork_simplejwt.authenticate.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 # JWT-AUTH 설정
@@ -91,7 +91,7 @@ SIMPLE_JWT = {
     'TOKEN_USER_CLASS': 'user.User',
 }
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'user.User'
 
 ROOT_URLCONF = 'studymate.urls'
 

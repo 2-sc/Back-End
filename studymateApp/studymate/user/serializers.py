@@ -46,19 +46,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 # 로그인
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required = True)
-    password = serializers.CharField(required = True, write_only=True)
-
-    def validate(self, value):
-        user = authenticate(**value)
-        if user:
-            token = Token.objects.get(user=user)
-            return token
-        else:
-            raise serializers.ValidationError(
-                {'error': '로그인 할 수 없습니다.'}
-            )
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        models = User,
+        fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
