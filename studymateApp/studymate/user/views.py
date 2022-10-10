@@ -1,11 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework.authentication import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-
 from .jwt import create_access_token, create_refrest_token
 from .serializers import LoginSerializer, ProfileSerializer, RegisterSerializer
 from .models import User
