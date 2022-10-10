@@ -9,7 +9,8 @@ from rest_framework.validators import UniqueValidator
 # 회원가입
 class RegisterSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField(
-        required = True
+        required = True,
+        validators = [UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
         required = True,
