@@ -4,22 +4,15 @@ from rest_framework import serializers
 class CategoryGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('subject',)
-
-    # def update(self, instance, validated_data):
-    #     print(self.pk)
-    #     category = Category.objects.get()
-    #     update_category = category.update(
-    #         email = self.email,
-    #         subject = validated_data['subject'],
-    #         time = self.time,
-    #         register_dttm = self.register_dttm
-    #     )
-    #     update_category.save()
-    #     return update_category
+        fields = ('id', 'subject',)
 
 class CategoryCreateSerializer(serializers.Serializer):
     subject = serializers.CharField(required = True)
+
+    def validate(self, data):
+        if Category.objects.filter(subject=data['subject']).exists():
+            raise serializers.ValidationError({'subject': '이미 있는 카테고리입니다.'})
+        return data
 
     def create(self, validated_data):
         category = Category.objects.create(
@@ -32,24 +25,9 @@ class CategoryCreateSerializer(serializers.Serializer):
 class CategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'email', 'subject', 'time', 'register_dttm']
+        fields = ['subject', ]
 
-    
-
-# class StopwatchSerializer(serializers.ModelSerializer):
-#     subject = serializers.CharField(required = True)
-#     time = serializers.IntegerField(required = True)
-    
-#     class Meta:
-#         model = Category
-#         fields = ('id', 'email', 'subject', 'time')
-
-#     def update(self, instance, validated_data):
-#         category = Category.objects.get(pk=instance.pk)
-#         update_category = Category.objects.update(
-#             email = validated_data['email'],
-#             subject = validated_data['subject'],
-#             time = category.time + validated_data['time']
-#         )
-#         update_category.save()
-#         return update_category
+    def validate(self, data):
+        if Category.objects.filter(subject=data['subject']).exists():
+            raise serializers.ValidationError({'subject': '이미 있는 카테고리입니다.'})
+        return data

@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import CategoryView
+from .views import CategoryView, CategoryAllView
 
 urlpatterns = [
-    path('category/', CategoryView.as_view()),
-    path('category/<int:pk>/', CategoryView.as_view()),
+    path('all/', CategoryAllView.as_view()),
+    path('post/', CategoryView.as_view()),
+    path('<int:pk>/', CategoryView.as_view())
 ]
