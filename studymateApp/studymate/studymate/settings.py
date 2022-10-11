@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # token
     'rest_framework',
-    'rest_framework_simplejwt',
     # app
     'user',
     'category',
@@ -72,24 +71,7 @@ CORS_ALLOW_CREDENTIALS = True
 # 5. 토큰을 decode 하면 현재 접속된 user 의 id를 얻을 수 있다. id를 통해 DB에서 user를 찾고, CSRF를 확인한 다음 user를 리턴.
 # 6. request.user 에 현재 요청을 보낸 유저가 담기고, view 에서 사용 가능
 
-REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # auth 앱에 있는 authenticate.py 에 있는 SafeJWTAuthentication 클래스를 기본 인증 클래스로 설정
-        # request.user 에 알맞은 user를 적재해 주는 역할을 한다
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
-}
-# JWT-AUTH 설정
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
-    'ROTATE_REFRESH)TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'TOKEN_USER_CLASS': 'user.User',
-}
+
 
 AUTH_USER_MODEL = 'user.User'
 
