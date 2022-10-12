@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     # app
     'user',
     'category',
-    'planner'
+    'planner',
+    'stopwatch'
 ]
 
 MIDDLEWARE = [
@@ -59,19 +60,6 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-# 인증 -> 현재 유저가 누구인지 파악
-# 인가 -> 현재 접속된 유저에 따라 권한을 부여할 수 있다.
-
-# 인증 과정
-# 1. 클라이언트로 부터 요청받기
-# 2. 요청 헤더에 포함된 Authorization 값 읽기
-# 3. 헤더에 Aythorization 값이 없으면 None 리턴, 값이 있다면 값을 저장한 후 다음으로 넘어간다.
-# 4. Authorization 값을 decode 한다. 토큰의 유효시간이 지났거나 jwt 토큰이 아닌경우 예외처리
-# 5. 토큰을 decode 하면 현재 접속된 user 의 id를 얻을 수 있다. id를 통해 DB에서 user를 찾고, CSRF를 확인한 다음 user를 리턴.
-# 6. request.user 에 현재 요청을 보낸 유저가 담기고, view 에서 사용 가능
-
-
 
 AUTH_USER_MODEL = 'user.User'
 
