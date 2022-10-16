@@ -13,15 +13,14 @@ from .serializers import CategoryGetSerializer, CategoryCreateSerializer, Catego
 # 카테고리
 class CategoryAllView(APIView):
     permission_classes = [isAuthenticated]
-
     # 카테고리 조회
     def get(self, request):
         try:
             token = request.headers['Authorization']
             user_token = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-            user = User.objects.get(pk=user_token['id'])
-            categorys = Category.objects.filter(email=user.email)
+            categorys = Category.objects.filter(email_id=user_token['id'])
             seiralizer = CategoryGetSerializer(categorys, many=True)
+            print(seiralizer.data)
             return Response(seiralizer.data, status=status.HTTP_200_OK)
         except:
             return Response({'isSuccess': False, 'msg': '카테고리 조회를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,19 +32,23 @@ class CategoryView(APIView):
     def post(self, request):
         token = request.headers['Authorization']
         user_token = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        user = User.objects.get(pk=user_token['id'])
         serializer = CategoryCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.email = user.email
+            serializer.email_id = user_token['id']
             serializer.save()
             return Response({'isSuccess': True, 'msg': '카테고리 생성 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '카테고리 생성을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 과목 수정 request -> {email, subject}
     def patch(self, request, pk):
+        user_token = request.headers['Authorization']
+        user_decode = jwt.decode(user_token, SECRET_KEY, algorithms='HS256')
+        user = User.objects.get(pk=user_decode['id'])
         category = Category.objects.get(pk=pk)
         serializer = CategoryUpdateSerializer(category, data=request.data)
         if serializer.is_valid():
+            if Category.objects.filter(email_id=user.id, subject=serializer.validated_data['subject']).exists():
+                return Response({'isSuccess': False, 'msg': '이미 있는 카테고리입니다.'}, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             return Response({'isSuccess': True, 'msg': '카테고리 수정 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '카테고리 수정을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
