@@ -59,12 +59,25 @@ class TodoDetailAPIView(APIView):
         return Response({'isSuccess': False, 'msg': '투두 삭제를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 스케줄만 조회
+# 스케줄 조회
 class ScheduleAPIView(APIView):
     def get(self, request):
-        schedule = Schedule.objects.all()
-        serializers = ScheduleSerializer(schedule, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        # request -> X -> {register=today}
+        if request.data.get("register") is None:
+            today = datetime.now().strftime("%Y-%m-%d")
+            schedule = Schedule.objects.filter(register=today)
+            serializer = ScheduleSerializer(schedule, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # request -> {register="0000-00-00"}
+        elif request.data.get("register") == "0000-00-00":
+            schedule = Schedule.objects.all().order_by('-register')
+            serializer = ScheduleSerializer(schedule, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # request -> {register}
+        else:
+            schedule = Schedule.objects.filter(register=request.data.get("register"))
+            serializer = ScheduleSerializer(schedule, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 스케줄 생성
@@ -73,25 +86,17 @@ class ScheduleCreateAPIView(APIView):
         serializer = ScheduleSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'isSuccess': True, 'msg': '스케줄 생성 되었습니다.'}, status=status.HTTP_200_OK)
+            return Response({'isSuccess': True, 'msg': '스케줄 생성 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '스케줄 생성을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 스케줄 수정 및 삭제
+# 스케줄 삭제
 class ScheduleDetailAPIView(APIView):
-    def patch(self, request, pk):
-        schedule = get_object_or_404(Schedule, pk=pk)
-        serializer = ScheduleSerializer(schedule, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'isSuccess': True, 'msg': '스케줄 수정 되었습니다.'}, status=status.HTTP_200_OK)
-        return Response({'isSuccess': False, 'msg': '스케줄 수정을 실패했습니다'}, status=status.HTTP_400_BAD_REQUEST)
-
     def delete(self, request, pk):
         schedule = get_object_or_404(Schedule, pk=pk)
         schedule.delete()
         if schedule is not None:
-            return Response({'isSuccess': True, 'msg': '스케줄 삭제 되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'isSuccess': True, 'msg': '스케줄 삭제 되었습니다.'}, status=status.HTTP_202_ACCEPTED)
         return Response({'isSuccess': False, 'msg': '스케줄 삭제를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
