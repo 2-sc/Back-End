@@ -5,15 +5,30 @@ from rest_framework.generics import get_object_or_404
 from .models import Todo, Schedule, Comment
 from .serializers import TodoSerializer, ScheduleSerializer, CommentSerializer
 
+from datetime import datetime
 
 # Create your views here.
 
 # 투두리스트만 조회
 class TodoAPIView(APIView):
     def get(self, request):
-        todo = Todo.objects.all()
-        serializers = TodoSerializer(todo, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        def get(self, request):
+            # request -> X -> {register=today}
+            if request.data.get("register") is None:
+                today = datetime.now().strftime('%Y-%m-%d')
+                todo = Todo.objects.filter(register=today)
+                serializer = TodoSerializer(todo, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # request -> {register="0000-00-00"}
+            elif request.data.get("register") == "0000-00-00":
+                todo = Todo.objects.all().order_by('-register')  # 내림차순
+                serializer = TodoSerializer(todo, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # request -> {register}
+            else:
+                todo = Todo.objects.filter(register=request.data.get("register"))
+                serializer = TodoSerializer(todo, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 투두리스트 생성
@@ -33,14 +48,14 @@ class TodoDetailAPIView(APIView):
         serializer = TodoSerializer(todo, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'isSuccess': True, 'msg': '투두 수정 되었습니다.'}, status=status.HTTP_200_OK)
+            return Response({'isSuccess': True, 'msg': '투두 수정 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '투두 수정을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         todo = get_object_or_404(Todo, pk=pk)
         todo.delete()
         if todo is not None:
-            return Response({'isSuccess': True, 'msg': '투두 삭제 되었습니다'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'isSuccess': True, 'msg': '투두 삭제 되었습니다'}, status=status.HTTP_202_ACCEPTED)
         return Response({'isSuccess': False, 'msg': '투두 삭제를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
