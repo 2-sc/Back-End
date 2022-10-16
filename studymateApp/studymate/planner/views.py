@@ -7,6 +7,7 @@ from .serializers import TodoSerializer, ScheduleSerializer, CommentSerializer
 
 from datetime import datetime
 
+
 # Create your views here.
 
 # 투두리스트만 조회
@@ -37,20 +38,12 @@ class TodoCreateAPIView(APIView):
         serializer = TodoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'isSuccess': True, 'msg': '투두 생성 되었습니다.'}, status=status.HTTP_200_OK)
+            return Response({'isSuccess': True, 'msg': '투두 생성 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '투두 생성을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 투두리스트 수정 및 삭제
+# 투두리스트 삭제
 class TodoDetailAPIView(APIView):
-    def patch(self, request, pk):
-        todo = get_object_or_404(Todo, pk=pk)
-        serializer = TodoSerializer(todo, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'isSuccess': True, 'msg': '투두 수정 되었습니다.'}, status=status.HTTP_201_CREATED)
-        return Response({'isSuccess': False, 'msg': '투두 수정을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-
     def delete(self, request, pk):
         todo = get_object_or_404(Todo, pk=pk)
         todo.delete()
