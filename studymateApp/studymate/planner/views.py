@@ -100,12 +100,25 @@ class ScheduleDetailAPIView(APIView):
         return Response({'isSuccess': False, 'msg': '스케줄 삭제를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 다짐만 조회
+# 다짐 조회
 class CommentAPIView(APIView):
     def get(self, request):
-        comment = Comment.objects.all()
-        serializers = CommentSerializer(comment, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        # request -> X -> {register=today}
+        if request.data.get("register") is None:
+            today = datetime.now().strftime("%Y-%m-%d")
+            comment = Comment.objects.filter(register=today)
+            serializer = CommentSerializer(comment, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # request -> {register="0000-00-00"}
+        elif request.data.get("register") == "0000-00-00":
+            comment = Comment.objects.all().order_by('-register')
+            serializer = CommentSerializer(comment, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # request -> {register}
+        else:
+            comment = Comment.objects.filter(register=request.data.get("register"))
+            serializer = CommentSerializer(comment, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 다짐 생성
@@ -114,7 +127,7 @@ class CommentCreateAPIView(APIView):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'isSuccess': True, 'msg': '다짐 생성 되었습니다.'}, status=status.HTTP_200_OK)
+            return Response({'isSuccess': True, 'msg': '다짐 생성 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '다짐 생성을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -125,12 +138,12 @@ class CommentDetailAPIView(APIView):
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'isSuccess': True, 'msg': '다짐 수정 되었습니다.'}, status=status.HTTP_200_OK)
+            return Response({'isSuccess': True, 'msg': '다짐 수정 되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '다짐 수정을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk)
         comment.delete()
         if comment is not None:
-            return Response({'isSuccess': True, 'msg': '다짐 삭제 되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'isSuccess': True, 'msg': '다짐 삭제 되었습니다.'}, status=status.HTTP_202_ACCEPTED)
         return Response({'isSuccess': False, 'msg': '다짐 삭제를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)

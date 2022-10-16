@@ -19,3 +19,8 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('comment', 'register')
+
+    def validate(self, data):
+        if Comment.objects.filter(register=data['register']).exists():
+            raise serializers.ValidationError({'register': '오늘의 다짐이 존재합니다.'})
+        return data
