@@ -6,7 +6,7 @@ from .models import Todo, Schedule, Comment
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
-        fields = ('todo', 'complete', 'register')
+        fields = ('user_id', 'todo', 'complete', 'register')
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -21,6 +21,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('comment', 'register')
 
     def validate(self, data):
-        if Comment.objects.filter(register=data['register']).exists():
+        if Comment.objects.filter(register=data['comment']).exists():
             raise serializers.ValidationError({'register': '오늘의 다짐이 존재합니다.'})
         return data

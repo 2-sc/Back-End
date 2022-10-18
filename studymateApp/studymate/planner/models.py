@@ -4,6 +4,7 @@ from django.utils import timezone
 
 # Create your models here.
 class Todo(models.Model):
+    user_id = models.ForeignKey('user.User', verbose_name="user_id", on_delete=models.CASCADE, null=True)
     todo = models.CharField(max_length=20, verbose_name="todo")
     complete = models.BooleanField()
     register = models.DateField(verbose_name="today", default=timezone.now)
@@ -13,6 +14,7 @@ class Todo(models.Model):
 
 
 class Schedule(models.Model):
+    user_id = models.ForeignKey('user.User', verbose_name="user_id", on_delete=models.CASCADE, null=True)
     schedule = models.CharField(max_length=20, verbose_name="schedule")
     register = models.DateField(verbose_name="today", default=timezone.now)
 
@@ -21,6 +23,7 @@ class Schedule(models.Model):
 
 
 class Comment(models.Model):
+    user_id = models.ForeignKey('user.User', verbose_name="user_id", on_delete=models.CASCADE, null=True)
     comment = models.CharField(max_length=20, verbose_name="comment")
     register = models.DateField(verbose_name="today", default=timezone.now)
 

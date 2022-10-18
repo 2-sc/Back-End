@@ -1,4 +1,5 @@
 django
 djangorestframework
 Pillow
-djangorestframework-simplejwt
+pyjwt
+django-cors-headers
