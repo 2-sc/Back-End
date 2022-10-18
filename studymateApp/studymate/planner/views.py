@@ -13,24 +13,24 @@ from datetime import datetime
 # 투두리스트만 조회
 class TodoAPIView(APIView):
     def get(self, request):
-        def get(self, request):
-            # request -> X -> {register=today}
+        if request.data.get("user_id") is not None:
+            # request -> {"user_id": Int, "register": null}
             if request.data.get("register") is None:
-                today = datetime.now().strftime('%Y-%m-%d')
-                todo = Todo.objects.filter(register=today)
+                todo = Todo.objects.filter(register=datetime.now().strftime('%Y-%m-%d'), user_id=request.data.get("user_id"))
                 serializer = TodoSerializer(todo, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            # request -> {register="0000-00-00"}
+            # request -> {"user_id": Int, "register": "0000-00-00"}
             elif request.data.get("register") == "0000-00-00":
-                todo = Todo.objects.all().order_by('-register')  # 내림차순
+                todo = Todo.objects.order_by('-register').filter(user_id=request.data.get("user_id"))  # 내림차순
                 serializer = TodoSerializer(todo, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            # request -> {register}
+            # request -> {"user_id": Int, "register": "date(yyyy-mm-dd)"}
             else:
-                todo = Todo.objects.filter(register=request.data.get("register"))
+                todo = Todo.objects.filter(register=request.data.get("register"), user_id=request.data.get("user_id"))
                 serializer = TodoSerializer(todo, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-
+        else:
+            return Response({'isSuccess': False, 'msg':'투두 조회를 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # 투두리스트 생성
 class TodoCreateAPIView(APIView):
@@ -54,21 +54,25 @@ class TodoDetailAPIView(APIView):
 
 # 스케줄 조회
 class ScheduleAPIView(APIView):
+
+
+
     def get(self, request):
-        # request -> X -> {register=today}
+        id = request.data.get("user_id")
+        # request -> {"user_id": Int, "register": null}
+        id = request.data.get("user_id")
         if request.data.get("register") is None:
-            today = datetime.now().strftime("%Y-%m-%d")
-            schedule = Schedule.objects.filter(register=today)
+            schedule = Schedule.objects.filter(register=datetime.now().strftime("%Y-%m-%d"), user_id=id)
             serializer = ScheduleSerializer(schedule, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        # request -> {register="0000-00-00"}
+        # request -> {"user_id": Int, "register": "0000-00-00"}
         elif request.data.get("register") == "0000-00-00":
-            schedule = Schedule.objects.all().order_by('-register')
+            schedule = Schedule.objects.filter(user_id=id).order_by('-register')
             serializer = ScheduleSerializer(schedule, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        # request -> {register}
+        # request -> {"user_id": Int, "register": "date(yyyy-mm-dd)"}
         else:
-            schedule = Schedule.objects.filter(register=request.data.get("register"))
+            schedule = Schedule.objects.filter(register=request.data.get("register"), user_id=request.data.get("user_id"))
             serializer = ScheduleSerializer(schedule, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -96,18 +100,19 @@ class ScheduleDetailAPIView(APIView):
 # 다짐 조회
 class CommentAPIView(APIView):
     def get(self, request):
-        # request -> X -> {register=today}
-        if request.data.get("register") is None:
+        id = request.data.get("user_id")
+        # request -> {"user_id": Int, "register": null}
+        if request.data.get("comment") is None:
             today = datetime.now().strftime("%Y-%m-%d")
             comment = Comment.objects.filter(register=today)
             serializer = CommentSerializer(comment, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        # request -> {register="0000-00-00"}
+        # request -> {"user_id": Int, "register": "0000-00-00"}
         elif request.data.get("register") == "0000-00-00":
             comment = Comment.objects.all().order_by('-register')
             serializer = CommentSerializer(comment, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        # request -> {register}
+        # request -> {"user_id": Int, "register": "date(yyyy-mm-dd)"}
         else:
             comment = Comment.objects.filter(register=request.data.get("register"))
             serializer = CommentSerializer(comment, many=True)
