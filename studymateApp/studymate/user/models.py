@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from datetime import datetime
 
 # Create your models here.
 
@@ -27,11 +28,14 @@ class UserManager(BaseUserManager):
         return super_user
         
 class User(AbstractBaseUser):
-    email = models.EmailField(max_length=128, verbose_name='이메일', unique=True)
+    email = models.EmailField(verbose_name='이메일', unique=True)
     nickname = models.CharField(max_length=20, verbose_name='닉네임')
-    image = models.ImageField(upload_to='profile/', default='default.jpeg', verbose_name='이미지')
+    image = models.ImageField(upload_to='', default='default.jpeg', verbose_name='이미지')
     info = models.TextField(default='자기소개를 입력해주세요.' ,verbose_name='자기소개')
-    # d_day = models.DateField(verbose_name='디데이')
+    page = models.CharField(max_length=50, verbose_name='웹사이트 주소', default='블로그 주소를 입력해주세요')
+    d_day_start = models.DateField(verbose_name='디데이 시작 날짜', default=datetime.now().strftime("%Y-%m-%d"))
+    d_day_end = models.DateField(verbose_name='디데이 끝 날짜', default=datetime.now().strftime("%Y-%m-%d"))
+    d_day = models.CharField(max_length=50, default="0")
 
     # User 모델의 필수 필드
     is_active = models.BooleanField(default=True)   

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authentication import authenticate
 from rest_framework.views import APIView
@@ -8,6 +9,7 @@ from .jwt import create_access_token, create_refrest_token
 from .serializers import LoginSerializer, ProfileSerializer, RegisterSerializer
 from .models import User
 from .permissions import isAuthenticated
+
 
 
 # Create your views here.
@@ -60,19 +62,19 @@ class LoginView(APIView):
         return Response({'isSuccess': False, 'msg': '로그인이 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # 로그아웃 손 봐야할듯
-class LogoutView(APIView):
-    permission_classes = [isAuthenticated]
+# class LogoutView(APIView):
+#     permission_classes = [isAuthenticated]
 
-    def get(self, request):
-        res = Response(
-            {
-                'isSuccess': True,
-                'msg': '로그아웃 되었습니다.'
-            },
-            status=status.HTTP_200_OK
-        )
+#     def get(self, request):
+#         res = Response(
+#             {
+#                 'isSuccess': True,
+#                 'msg': '로그아웃 되었습니다.'
+#             },
+#             status=status.HTTP_200_OK
+#         )
 
-        return res
+#         return res
 
         
 # 프로필
@@ -91,6 +93,8 @@ class UserProfileView(APIView):
                     'email': serializer.data['email'],
                     'image': serializer.data['image'],
                     'info': serializer.data['info'],
+                    'page': serializer.data['page'],
+                    'd_day': serializer.data['d_day']
                 },
                 status=status.HTTP_200_OK
             )
@@ -111,6 +115,12 @@ class UserProfileView(APIView):
             return Response({'isSuccess': False, 'msg': '이미 존재하는 닉네임입니다.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = ProfileSerializer(user_profile, data=request.data)
         if serializer.is_valid():
+            if(datetime.now().strftime("%Y-%m") == serializer.validated_data['d_day_start'].strftime("%Y-%m") and serializer.validated_data['d_day_start'].strftime("%d") <= datetime.now().strftime("%d") <= serializer.validated_data['d_day_end'].strftime("%d")):
+                serializer.validated_data['d_day'] = "0"
+            else:
+                starttime = datetime.strptime(str(serializer.validated_data['d_day_start']),"%Y-%m-%d")
+                d_day = abs(datetime.now().today() - starttime)
+                serializer.validated_data['d_day'] = d_day.days + 1
             serializer.save()
             return Response({'isSuccess': True, 'msg': '프로필이 수정되었습니다.'}, status=status.HTTP_201_CREATED)
         return Response({'isSuccess': False, 'msg': '프로필 수정을 실패했습니다.'}, status=status.HTTP_400_BAD_REQUEST)
