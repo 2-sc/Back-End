@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class StopWatch(models.Model):
-    email = models.EmailField()
+    email_id = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='email_id_s')
     subject = models.CharField(max_length=32)
     startTime = models.CharField(max_length=32)
     endTime = models.CharField(max_length=32)
