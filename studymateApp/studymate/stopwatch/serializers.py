@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import StopWatch
 from datetime import datetime, timedelta
+from user.models import User
 
 class StopWatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,18 +14,17 @@ class StopWatchStartSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         stopwatch = StopWatch.objects.create(
-            email = self.email,
+            email_id = User.objects.get(pk=self.email_id),
             subject = validated_data['subject'],
             startTime = datetime.now().strftime('%H:%M:%S'),
             endTime = '00:00:00',
             totalTime = '00:00:00',
-            register_dttm = validated_data['register_dttm']
+            register_dttm = '1111:11:11'
         )
         stopwatch.save()
         return stopwatch
 
 class StopWatchEndSerializer(serializers.Serializer):
-    subject = serializers.CharField(required=True)
     register_dttm = serializers.DateField(default=datetime.now().strftime('%Y-%m-%d'))
 
     # self -> 전달된 데이터, instance -> 기존에 저장된 데이터
