@@ -6,7 +6,7 @@ from django.utils import timezone
 class Todo(models.Model):
     user_id = models.ForeignKey('user.User', verbose_name="user_id", on_delete=models.CASCADE, null=True)
     todo = models.CharField(max_length=20, verbose_name="todo")
-    complete = models.BooleanField()
+    complete = models.BooleanField(default=False, verbose_name="complete")
     register = models.DateField(verbose_name="today", default=timezone.now)
 
     def __str__(self):

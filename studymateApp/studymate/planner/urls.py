@@ -12,5 +12,5 @@ urlpatterns = [
     path('schedule/<int:pk>/', ScheduleDetailAPIView.as_view()),
     path('comment/', CommentAPIView.as_view()),
     path('comment/post/', CommentCreateAPIView.as_view()),
-    path('comment/<int:pk>/', CommentDetailAPIView.as_view())
+    path('comment/<int:pk>/', CommentDetailAPIView.as_view()),
 ]
