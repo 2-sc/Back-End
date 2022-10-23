@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-^7seyqe&*h)y^x5oxgrr(0qpxjw-x%fzr++-r#2edda413bca2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-54-209-170-145.compute-1.amazonaws.com', 'studymate.site', '172.31.28.180']
+ALLOWED_HOSTS = ['ec2-52-20-188-157.compute-1.amazonaws.com' 'studymate.site', '172.31.28.180', '52.20.188.157']
 
 # def is_ec2_linux():
 #     if os.path.isfile("sys/hypervisor/uuid"):
