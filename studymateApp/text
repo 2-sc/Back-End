@@ -1,0 +1,1 @@
+uwsgi --http :8080 --home /home/ubuntu/studymate_venv/ --chdir Back-End/studymateApp/studymate/ -w studymate.wsgi
