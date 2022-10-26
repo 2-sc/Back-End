@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-^7seyqe&*h)y^x5oxgrr(0qpxjw-x%fzr++-r#2edda413bca2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-54-197-12-0.compute-1.amazonaws.com', '54.197.12.0', '.studymate.site']
+ALLOWED_HOSTS = ['studymate.site']#['ec2-54-197-12-0.compute-1.amazonaws.com', '54.197.12.0', 'studymate.site']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
