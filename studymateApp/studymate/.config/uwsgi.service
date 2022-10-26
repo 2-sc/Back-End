@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
  
 [Service]
-ExecStart=/home/ubuntu/studymate_venv/bin/uwsgi -i Back-End/studymateApp/studymate/.config/mysite.ini
+ExecStart=/home/ubuntu/studymate_venv/bin/uwsgi -i /home/ubuntu/Back-End/studymateApp/studymate/.config/mysite.ini
  
 Restart=always
 KillSignal=SIGQUIT
